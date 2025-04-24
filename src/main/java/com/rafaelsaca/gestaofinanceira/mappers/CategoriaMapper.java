@@ -1,19 +1,19 @@
 package com.rafaelsaca.gestaofinanceira.mappers;
 
-import com.rafaelsaca.gestaofinanceira.dto.CategoriaDto;
+import com.rafaelsaca.gestaofinanceira.dto.CategoriaDTO;
 import com.rafaelsaca.gestaofinanceira.models.Categoria;
 
 public class CategoriaMapper {
 
-    public static Categoria toModel (CategoriaDto dto){
+    public static Categoria toModel (CategoriaDTO dto){
         Categoria categoria = new Categoria();
         categoria.setDescricao(dto.descricao());
         
         return categoria;
     }
 
-    public static CategoriaDto toDto (Categoria categoria){
-        return new CategoriaDto(
+    public static CategoriaDTO toDto (Categoria categoria){
+        return new CategoriaDTO(
             categoria.getDescricao());
     }
 

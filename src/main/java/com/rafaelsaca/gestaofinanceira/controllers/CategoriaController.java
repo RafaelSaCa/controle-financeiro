@@ -13,12 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rafaelsaca.gestaofinanceira.dto.CategoriaDto;
+import com.rafaelsaca.gestaofinanceira.dto.CategoriaDTO;
 import com.rafaelsaca.gestaofinanceira.models.Categoria;
 import com.rafaelsaca.gestaofinanceira.services.CategoriaService;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/categorias")
@@ -31,7 +30,7 @@ public class CategoriaController {
     }
 
     @PostMapping()
-    public ResponseEntity<Categoria> cadastrar(@RequestBody @Valid CategoriaDto dto) {
+    public ResponseEntity<Categoria> cadastrar(@RequestBody @Valid CategoriaDTO dto) {
         Categoria categoria = service.cadastrar(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(categoria);
     }
@@ -42,7 +41,7 @@ public class CategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> atualizar(@PathVariable Long id, @RequestBody @Valid CategoriaDto dto) {
+    public ResponseEntity<Categoria> atualizar(@PathVariable Long id, @RequestBody @Valid CategoriaDTO dto) {
         Categoria categoria = service.atualizar(id, dto);
 
         return ResponseEntity.ok(categoria);
