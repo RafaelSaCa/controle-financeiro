@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.rafaelsaca.gestaofinanceira.dto.CategoriaDto;
+import com.rafaelsaca.gestaofinanceira.dto.CategoriaDTO;
 import com.rafaelsaca.gestaofinanceira.exceptions.CategoriaExistenteException;
 import com.rafaelsaca.gestaofinanceira.exceptions.CategoriaNaoEncontradaException;
 import com.rafaelsaca.gestaofinanceira.mappers.CategoriaMapper;
@@ -21,7 +21,7 @@ public class CategoriaService {
         this.repository = repository;
     }
 
-    public Categoria cadastrar(CategoriaDto dto) {
+    public Categoria cadastrar(CategoriaDTO dto) {
         Optional<Categoria> categoriaExistente = repository.findByDescricaoIgnoreCase(dto.descricao());
 
         if (categoriaExistente.isPresent()) {
@@ -38,7 +38,7 @@ public class CategoriaService {
         return repository.findAll();
     }
 
-    public Categoria atualizar(Long id, CategoriaDto dto) {
+    public Categoria atualizar(Long id, CategoriaDTO dto) {
         Categoria categoria = repository.findById(id)
                 .orElseThrow(() -> new CategoriaNaoEncontradaException());
 
