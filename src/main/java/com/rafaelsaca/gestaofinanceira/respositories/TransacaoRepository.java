@@ -1,8 +1,11 @@
 package com.rafaelsaca.gestaofinanceira.respositories;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.rafaelsaca.gestaofinanceira.models.TipoTransacao;
 import com.rafaelsaca.gestaofinanceira.models.Transacao;
@@ -33,6 +36,13 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
 
     // Buscar por usuário
     List<Transacao> findByUsuarioId(Long usuarioId);
+
+    @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'RECEITA'")
+    BigDecimal totalReceitas(@Param("usuarioId") Long usuarioId);
+
+
+    @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'DESPESA'")
+    BigDecimal totalDespesas(@Param("usuarioId") Long usuarioId);
 
     // //Combinação: buscar por usuário, tipo e data no intervalo
     // List<Transacao> findByUsuarioIdAndTipoAndDataTransacaoBetween(
