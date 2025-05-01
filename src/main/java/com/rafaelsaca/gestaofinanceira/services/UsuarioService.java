@@ -61,7 +61,7 @@ public class UsuarioService implements UserDetailsService {
         usuario.setNome(dto.nome());
         usuario.setSobrenome(dto.sobrenome());
         usuario.setEmail(dto.email());
-        usuario.setSenha(dto.senha());
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
 
         return repository.save(usuario);
 
