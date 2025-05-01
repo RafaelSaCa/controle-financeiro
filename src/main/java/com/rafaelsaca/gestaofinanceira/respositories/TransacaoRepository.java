@@ -37,11 +37,11 @@ public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
     // Buscar por usuário
     List<Transacao> findByUsuarioId(Long usuarioId);
 
-    @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'RECEITA'")
+    @Query("SELECT COALESCE(SUM(t.valor), 0.00) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'RECEITA'")
     BigDecimal totalReceitas(@Param("usuarioId") Long usuarioId);
 
 
-    @Query("SELECT SUM(t.valor) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'DESPESA'")
+    @Query("SELECT COALESCE(SUM(t.valor), 0.00) FROM Transacao t WHERE t.usuario.id = :usuarioId AND t.tipo = 'DESPESA'")
     BigDecimal totalDespesas(@Param("usuarioId") Long usuarioId);
 
     // //Combinação: buscar por usuário, tipo e data no intervalo
