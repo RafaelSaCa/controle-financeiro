@@ -3,6 +3,10 @@ package com.rafaelsaca.gestaofinanceira.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.rafaelsaca.gestaofinanceira.dto.UsuarioDTO;
@@ -13,11 +17,14 @@ import com.rafaelsaca.gestaofinanceira.models.Usuario;
 import com.rafaelsaca.gestaofinanceira.respositories.UsuarioRepository;
 
 @Service
-public class UsuarioService {
+public class UsuarioService implements UserDetailsService {
     private final UsuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository repository) {
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     public Usuario cadastrar(UsuarioDTO dto) {
@@ -28,6 +35,10 @@ public class UsuarioService {
         }
 
         Usuario usuario = UsuarioMapper.toModel(dto);
+        //encriptografa a senha
+        usuario.setSenha(passwordEncoder.encode(dto.senha()));
+     
+
 
         return repository.save(usuario);
 
@@ -55,4 +66,11 @@ public class UsuarioService {
         return repository.save(usuario);
 
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("E-mail não encontrado!"));
+    }
+
 }
