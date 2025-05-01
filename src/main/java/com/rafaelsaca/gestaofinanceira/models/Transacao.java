@@ -25,7 +25,7 @@ public class Transacao {
 
     private String descricao;
 
-    private BigDecimal valor;
+    private BigDecimal valor = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
     private TipoTransacao tipo;
