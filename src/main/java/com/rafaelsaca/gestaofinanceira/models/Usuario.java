@@ -1,6 +1,11 @@
 package com.rafaelsaca.gestaofinanceira.models;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,7 +19,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_usuarios")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,7 +46,7 @@ public class Usuario {
     }
 
     public Usuario() {
-        //TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     public Long getId() {
@@ -92,4 +97,39 @@ public class Usuario {
         this.transacoes = transacoes;
     }
 
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList(); // Sem roles por enquanto
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email; // Usamos o email como "username"
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
+    }
 }
