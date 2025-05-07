@@ -12,7 +12,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.rafaelsaca.gestaofinanceira.services.JwtService;
 import com.rafaelsaca.gestaofinanceira.services.UsuarioService;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +33,19 @@ public class JwtFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
+        // // Pular validação de token para rotas públicas
+        // String path = request.getRequestURI();
+        // if (path.startsWith("/auth")) {
+        //     filterChain.doFilter(request, response);
+        //     return;
+        // }
+
+         // Permitir requisições preflight (OPTIONS)
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+        // Verificação do token para rotas protegidas
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -52,7 +64,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
