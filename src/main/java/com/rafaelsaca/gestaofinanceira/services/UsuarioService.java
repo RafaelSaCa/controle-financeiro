@@ -73,4 +73,9 @@ public class UsuarioService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("E-mail não encontrado!"));
     }
 
+    public Usuario buscarPorEmail(String email) {
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+    }
+
 }
