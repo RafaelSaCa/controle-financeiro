@@ -13,42 +13,37 @@ import com.rafaelsaca.gestaofinanceira.models.Usuario;
 @Component
 public class TransacaoMapper {
 
-    public Transacao toModel (TransacaoDTO dto){
+    public Transacao toModel(TransacaoDTO dto, Usuario usuario) {
         Transacao transacao = new Transacao();
-        
+
         transacao.setDescricao(dto.descricao());
         transacao.setValor(dto.valor());
         transacao.setTipo(TipoTransacao.valueOf(dto.tipo().toUpperCase()));
 
         Categoria categoria = new Categoria();
         categoria.setId(dto.categoriaId());
-
-        Usuario usuario = new Usuario();
-        usuario.setId(dto.usuarioId());
-
         transacao.setCategoria(categoria);
+
         transacao.setUsuario(usuario);
+
         transacao.setDataVencimento(dto.dataVencimento());
 
         return transacao;
     }
 
-
-    public TransacaoDTO toDTO (Transacao transacao){
+    public TransacaoDTO toDTO(Transacao transacao) {
         return new TransacaoDTO(
-            transacao.getDescricao(), 
-            transacao.getValor(),
-            transacao.getTipo().toString(), 
-            transacao.getCategoria().getId(), 
-            transacao.getUsuario().getId(),
-            transacao.getDataVencimento()
-        );
-    }   
+                transacao.getDescricao(),
+                transacao.getValor(),
+                transacao.getTipo().toString(),
+                transacao.getCategoria().getId(),
+                transacao.getDataVencimento());
+    }
 
-    public List<TransacaoDTO> toListDTO (List<Transacao> transacoes){
+    public List<TransacaoDTO> toListDTO(List<Transacao> transacoes) {
         return transacoes.stream()
-                         .map(this::toDTO)
-                         .toList();
+                .map(this::toDTO)
+                .toList();
     }
 
 }
