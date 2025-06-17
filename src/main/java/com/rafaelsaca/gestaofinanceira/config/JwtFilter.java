@@ -4,11 +4,11 @@ import java.io.IOException;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.rafaelsaca.gestaofinanceira.models.Usuario;
 import com.rafaelsaca.gestaofinanceira.services.JwtService;
 import com.rafaelsaca.gestaofinanceira.services.UsuarioService;
 
@@ -53,13 +53,12 @@ public class JwtFilter extends OncePerRequestFilter {
             String email = jwtService.extractEmail(token);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails user = usuarioService.loadUserByUsername(email);
+                Usuario usuario = (Usuario)usuarioService.loadUserByUsername(email);
 
-                if (jwtService.isTokenValid(token, user)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user,
-                            null, user.getAuthorities());
+                if (jwtService.isTokenValid(token, usuario)) {
+                    UsernamePasswordAuthenticationToken authentication = 
+                    new UsernamePasswordAuthenticationToken(usuario,null, usuario.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
