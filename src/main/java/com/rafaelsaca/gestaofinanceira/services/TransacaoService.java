@@ -38,14 +38,12 @@ public class TransacaoService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Transacao cadastrar(TransacaoDTO dto) {
+    public Transacao cadastrar(TransacaoDTO dto, Usuario usuario) {
         Categoria categoria = categoriaRepository.findById(dto.categoriaId())
                 .orElseThrow(() -> new CategoriaNaoEncontradaException());
 
-        Usuario usuario = usuarioRepository.findById(dto.usuarioId())
-                .orElseThrow(() -> new UsuarioNaoEncontradoException());
-
-        Transacao transacao = transacaoMapper.toModel(dto);
+        Transacao transacao = transacaoMapper.toModel(dto, usuario);
+        transacao.setCategoria(categoria);
 
         return repository.save(transacao);
     }
@@ -101,18 +99,43 @@ public class TransacaoService {
         return transacoes;
     }
 
-    public TransacaoResponse transacoesPorUsuario(Long usuarioId) {
+
+    public TransacaoResponse transacoesPorUsuario(Long usuarioId, String tipoStr, Long categoriaId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new UsuarioNaoEncontradoException());
 
-        List<Transacao> transacoes = repository.findByUsuarioId(usuario.getId());
+        TipoTransacao tipo = null;
+        if (tipoStr != null && !tipoStr.isBlank()) {
+            try {
+                tipo = TipoTransacao.valueOf(tipoStr.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException("Tipo inválido: " + tipoStr);
+            }
+        }
 
+         List<Transacao> transacoes = repository.filtrarTransacoes(usuario.getId(), tipo, categoriaId);
 
-        BigDecimal totalReceitas = repository.totalReceitas(usuario.getId());
-        BigDecimal totalDespesas = repository.totalDespesas(usuario.getId());
-        BigDecimal saldo = totalReceitas.subtract(totalDespesas);
+        BigDecimal totalReceitas = BigDecimal.ZERO;
+        BigDecimal totalDespesas = BigDecimal.ZERO;
 
-        return TransacaoResponse.of(transacoes, totalReceitas, totalDespesas,saldo);
+        if (tipo == TipoTransacao.RECEITA) {
+            // Filtrado só por RECEITA → Calcula só receitas
+            totalReceitas = repository.totalReceitasFiltrado(usuarioId, categoriaId);
+
+        } else if (tipo == TipoTransacao.DESPESA) {
+            // Filtrado só por DESPESA → Calcula só despesas
+            totalDespesas = repository.totalDespesasFiltrado(usuarioId, categoriaId);
+
+        } else {
+            // Sem filtro de tipo → Calcula os dois
+            totalReceitas = repository.totalReceitasFiltrado(usuarioId, categoriaId);
+            totalDespesas = repository.totalDespesasFiltrado(usuarioId, categoriaId);
+        }
+
+        BigDecimal saldo = repository.totalReceitas(usuarioId)
+                .subtract(repository.totalDespesas(usuarioId));
+
+        return TransacaoResponse.of(transacoes, totalReceitas, totalDespesas, saldo);
     }
 
 }
