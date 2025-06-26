@@ -7,7 +7,7 @@ COPY . .
 RUN apt-get install maven -y
 RUN mvn clean install
 
-FROM eclipse-temurin:21-jre
+FROM openjdk:21-jre
 
 EXPOSE 8080
 
