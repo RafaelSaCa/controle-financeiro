@@ -6,6 +6,6 @@ public record LoginDTO(
         @NotBlank(message = "O e-mail é obrigatório!")
         String email, 
         @NotBlank(message = "A senha é obrigatória!")
-        String senha) {
+        String senha){
 
 }
