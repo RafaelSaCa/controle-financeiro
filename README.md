@@ -1,5 +1,5 @@
 💰 Controle Financeiro
-Sistema completo de controle de movimentações financeiras pessoais, com backend em Java Spring Boot e frontend em Angular. O projeto permite cadastrar transações, categorias, usuários, e possui autenticação com JWT.
+Sistema completo de controle de movimentações financeiras pessoais, com backend em Java Spring Boot. O projeto permite cadastrar transações, categorias, usuários, e possui autenticação com JWT.
 
 🔗 Deploy
 Backend API: Render API 
