@@ -34,4 +34,8 @@ Listagem, edição e exclusão de lançamentos
 
 Filtro por data e categoria
 
+🧑‍💻 Autor
+Rafael Sant' Anna Carvalho
+
+GitHub: @RafaelSaCa
 
